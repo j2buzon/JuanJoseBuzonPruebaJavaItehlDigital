@@ -1,7 +1,6 @@
 package co.com.jjbs.itehl.capacitacion.controller.rest;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,46 +15,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.com.jjbs.itehl.capacitacion.domain.Curso;
-import co.com.jjbs.itehl.capacitacion.repository.CursoRepository;
+import co.com.jjbs.itehl.capacitacion.service.CursoService;
 
 @RestController
 @RequestMapping(path = "/api/cursos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CursoRestController {
 
 	@Autowired
-	private CursoRepository cursoRepository;
+	private CursoService cursoRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<Curso>> getCourses() {
-		List<Curso> courses = cursoRepository.findAll();
-		return new ResponseEntity<>(courses, HttpStatus.OK);
+		return new ResponseEntity<>(cursoRepository.listCourses(), HttpStatus.OK);
 	}
 	
 	@GetMapping(path = "/modalidad/{id}")
 	public ResponseEntity<List<Curso>> getCoursesByModality(@PathVariable("id") String modalityId) {
-		List<Curso> courses = cursoRepository.findByModalidad(modalityId);
-		return new ResponseEntity<>(courses, HttpStatus.OK);
+		return new ResponseEntity<>(cursoRepository.listCoursesByModality(modalityId), HttpStatus.OK);
 	}
 	
 	@GetMapping(path = "/{id}")
 	public ResponseEntity<Curso> getCourseById(@PathVariable("id") String courseId) {
-		Optional<Curso> course = cursoRepository.findById(courseId);
-		if(course.isPresent())
-			return new ResponseEntity<>(course.get(), HttpStatus.OK);
+		Curso course = cursoRepository.findCourseById(courseId);
+		if(course!=null)
+			return new ResponseEntity<>(course, HttpStatus.OK);
 		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 	}
 	
 	
 	@PostMapping
 	public ResponseEntity<Curso> saveCourse(@RequestBody Curso course){
-		course = cursoRepository.insert(course);
-		return new ResponseEntity<>(course, HttpStatus.OK);
+		return new ResponseEntity<>(cursoRepository.saveCourse(course), HttpStatus.OK);
 	}
 	
 	@PutMapping
-	public ResponseEntity<Curso> updateCourse(@RequestBody Curso course){
-		course = cursoRepository.save(course);
-		return new ResponseEntity<>(course, HttpStatus.OK);
+	public ResponseEntity<Void> updateCourse(@RequestBody Curso course){
+		cursoRepository.updateCourse(course);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

@@ -13,23 +13,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.com.jjbs.itehl.capacitacion.domain.Modalidad;
-import co.com.jjbs.itehl.capacitacion.repository.ModalidadRepository;
+import co.com.jjbs.itehl.capacitacion.service.ModalidadService;
 
 @RestController
 @RequestMapping(path = "/api/modalidades", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ModalidadRestController {
 
 	@Autowired
-	private ModalidadRepository modalidadRepository;
+	private ModalidadService modalidadService;
 	
 	@GetMapping
 	public ResponseEntity<List<Modalidad>> getModalities(){
-		return new ResponseEntity<>(modalidadRepository.findAll(), HttpStatus.OK);
+		return new ResponseEntity<>(modalidadService.listModalities(), HttpStatus.OK);
 	}
 	
 	@PostMapping
 	public ResponseEntity<Modalidad> saveModality(@RequestBody Modalidad modality){
-		return new ResponseEntity<>(modalidadRepository.save(modality), HttpStatus.OK);
+		return new ResponseEntity<>(modalidadService.saveModality(modality), HttpStatus.OK);
 	}
 
 }

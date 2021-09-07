@@ -6,40 +6,32 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import co.com.jjbs.itehl.capacitacion.controller.rest.facade.CapacitacionAPIFacade;
 import co.com.jjbs.itehl.capacitacion.domain.Descuento;
-import co.com.jjbs.itehl.capacitacion.service.CursoService;
-import co.com.jjbs.itehl.capacitacion.service.DescuentoService;
-import co.com.jjbs.itehl.capacitacion.service.ModalidadService;
 
 @Controller
 public class DescuentoWebController {
 
 	@Autowired
-	private ModalidadService modalidadService;
-
-	@Autowired
-	private CursoService cursoService;
-	
-	@Autowired
-	private DescuentoService descuentoService;
+	private CapacitacionAPIFacade capacitacionAPIFacade;
 	
 	@GetMapping("/descuentos")
 	public String listDiscounts(Model model) {
-		model.addAttribute("discounts", descuentoService.listDiscount());
+		model.addAttribute("discounts", capacitacionAPIFacade.listDiscount());
 		return "discounts/list";
 	}
 	
 	@GetMapping(path = "/add-discount")
 	public String addDiscount(Model model) {
-		model.addAttribute("modalities", modalidadService.listModalities());
-		model.addAttribute("courses", cursoService.listCourses());
+		model.addAttribute("modalities", capacitacionAPIFacade.listModalities());
+		model.addAttribute("courses", capacitacionAPIFacade.listCourses());
 		model.addAttribute("discount", new Descuento());
 		return "discounts/discount";
 	}
 	
 	@PostMapping(path = "/add-discount")
 	public String saveDiscount(Descuento descuento) {
-		descuentoService.saveDiscount(descuento);
+		capacitacionAPIFacade.saveDiscount(descuento);
 		return "redirect:/discounts";
 	}
 

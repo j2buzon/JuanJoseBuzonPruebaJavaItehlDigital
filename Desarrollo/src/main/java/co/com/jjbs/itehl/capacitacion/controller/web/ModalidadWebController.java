@@ -6,18 +6,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import co.com.jjbs.itehl.capacitacion.controller.rest.facade.CapacitacionAPIFacade;
 import co.com.jjbs.itehl.capacitacion.domain.Modalidad;
-import co.com.jjbs.itehl.capacitacion.service.ModalidadService;
 
 @Controller
 public class ModalidadWebController {
 	
 	@Autowired
-	private ModalidadService modalidadService;
+	private CapacitacionAPIFacade capacitacionAPIFacade;
 	
 	@GetMapping("/modalidades")
 	public String listModalidades(Model model) {
-		model.addAttribute("modalities", modalidadService.listModalities());
+		model.addAttribute("modalities", capacitacionAPIFacade.listModalities());
 		return "modalities/list";
 	}
 	
@@ -29,7 +29,7 @@ public class ModalidadWebController {
 	
 	@PostMapping(path = "modalidad")
 	public String saveModalidad(Modalidad modalidad) {
-		modalidadService.saveModality(modalidad);
+		capacitacionAPIFacade.saveModality(modalidad);
 		return "redirect:/modalidades";
 	}
 
